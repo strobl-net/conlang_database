@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   postgres:
-    container_name: coomoji_data
+    container_name: postgres
     image: postgres
     environment:
       POSTGRES_USER: admin
@@ -11,13 +11,13 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - "5666:5432"
+      - "5432:5432"
     networks:
       - postgres
     restart: unless-stopped
 
   pgadmin:
-    container_name: coomoji_data_panal
+    container_name: pg_admin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.admin
@@ -27,7 +27,7 @@ services:
       - pgadmin:/root/.pgadmin
 
     ports:
-      - "6665:80"
+      - "5433:80"
     networks:
       - postgres
     restart: unless-stopped

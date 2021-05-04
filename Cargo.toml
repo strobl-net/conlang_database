@@ -1,0 +1,22 @@
+[package]
+name = "conlang_database"
+version = "0.1.0"
+authors = ["Sebastian <Sebastian@Strobl.net>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web= "=4.0.0-beta.5"
+actix-service = "=2.0.0-beta.5"
+actix-http = "=3.0.0-beta.5"
+actix-cors = "=0.6.0-beta.1"
+listenfd = "0.3.3"
+tera = "1.8.0"
+anyhow = "1.0.40"
+serde = { version = "1.0.125", features = ["derive"] }
+sqlx = { version = "0.5.1", features = ["runtime-actix-native-tls", "postgres", "macros", "json", "uuid", "chrono"] }
+dotenv = "0.15.0"
+futures = "0.3.14"
+chrono = { version = "0.4.19", features = ["serde"] }
+uuid = { version = "0.8.2", features = ["serde", "v4"] }
