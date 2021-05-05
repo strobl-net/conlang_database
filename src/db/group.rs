@@ -14,8 +14,8 @@ impl Model {
                 ORDER BY id
             "#
         )
-            .fetch_all(pool)
-            .await?;
+        .fetch_all(pool)
+        .await?;
 
         for rec in recs {
             items.push(Self {
@@ -34,8 +34,8 @@ impl Model {
             "#,
             id
         )
-            .fetch_one(pool)
-            .await?;
+        .fetch_one(pool)
+        .await?;
 
         Ok(Self {
             id: rec.id,
@@ -50,8 +50,8 @@ impl Model {
             "#,
             name
         )
-            .fetch_one(pool)
-            .await?;
+        .fetch_one(pool)
+        .await?;
 
         Ok(Self {
             id: rec.id,
@@ -67,13 +67,13 @@ impl Model {
                 RETURNING id, name
             "#,
         )
-            .bind(&item.name)
-            .map(|row: PgRow| Self {
-                id: row.get(0),
-                name: row.get(1),
-            })
-            .fetch_one(&mut tx)
-            .await?;
+        .bind(&item.name)
+        .map(|row: PgRow| Self {
+            id: row.get(0),
+            name: row.get(1),
+        })
+        .fetch_one(&mut tx)
+        .await?;
 
         tx.commit().await?;
         Ok(created)
@@ -88,14 +88,14 @@ impl Model {
                 RETURNING id, name
             "#,
         )
-            .bind(&item.name)
-            .bind(id)
-            .map(|row: PgRow| Self {
-                id: row.get(0),
-                name: row.get(1),
-            })
-            .fetch_one(&mut tx)
-            .await?;
+        .bind(&item.name)
+        .bind(id)
+        .map(|row: PgRow| Self {
+            id: row.get(0),
+            name: row.get(1),
+        })
+        .fetch_one(&mut tx)
+        .await?;
 
         tx.commit().await?;
         Ok(updated)
@@ -109,9 +109,9 @@ impl Model {
                 WHERE id = $1
             "#,
         )
-            .bind(id)
-            .execute(&mut tx)
-            .await?;
+        .bind(id)
+        .execute(&mut tx)
+        .await?;
 
         tx.commit().await?;
         Ok(true)

@@ -8,9 +8,10 @@ use tera::Tera;
 use crate::config::Config;
 
 mod config;
-mod models;
-mod routes;
 mod db;
+mod models;
+mod queries;
+mod routes;
 
 #[actix_web::main]
 async fn main() -> Result<()> {
@@ -26,7 +27,7 @@ async fn main() -> Result<()> {
             .data(pool.clone())
             .data(tera)
             .wrap(Cors::permissive().max_age(3600))
-            // .configure(routes::endpoints)
+            .configure(routes::endpoints)
     });
 
     server = match listenfd.take_tcp_listener(0)? {

@@ -1,4 +1,4 @@
-mod group;
-mod conlang;
-mod person;
-mod script;
+pub mod conlang;
+pub mod group;
+pub mod person;
+pub mod script;

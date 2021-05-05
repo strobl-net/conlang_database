@@ -1,12 +1,11 @@
 use chrono::NaiveDateTime;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
 #[derive(sqlx::Type)]
 #[sqlx(type_name = "purpose")]
 #[sqlx(rename_all = "lowercase")]
-#[derive(Ord, PartialOrd, Eq, PartialEq, Hash)]
-#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
+#[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum Purpose {
     Artistic,
     Personal,
@@ -17,8 +16,7 @@ pub enum Purpose {
 #[derive(sqlx::Type)]
 #[sqlx(type_name = "purpose_sub")]
 #[sqlx(rename_all = "lowercase")]
-#[derive(Ord, PartialOrd, Eq, PartialEq, Hash)]
-#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
+#[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum PurposeSub {
     Personal,
     Jokelang,
@@ -45,8 +43,7 @@ pub enum PurposeSub {
 #[derive(sqlx::Type)]
 #[sqlx(type_name = "physical_mode")]
 #[sqlx(rename_all = "lowercase")]
-#[derive(Ord, PartialOrd, Eq, PartialEq, Hash)]
-#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
+#[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum PhysicalMode {
     SpeechWriting,
     SpeechOnly,
@@ -59,8 +56,7 @@ pub enum PhysicalMode {
 #[derive(sqlx::Type)]
 #[sqlx(type_name = "development_level")]
 #[sqlx(rename_all = "lowercase")]
-#[derive(Ord, PartialOrd, Eq, PartialEq, Hash)]
-#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
+#[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum DevelopmentLevel {
     Minimal,
     Some,
@@ -76,8 +72,7 @@ pub enum DevelopmentLevel {
 #[derive(sqlx::Type)]
 #[sqlx(type_name = "vocabulary_source")]
 #[sqlx(rename_all = "lowercase")]
-#[derive(Ord, PartialOrd, Eq, PartialEq, Hash)]
-#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
+#[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum VocabularySource {
     Priori,
     Posteriori,
@@ -92,16 +87,14 @@ pub struct Person {
     pub name: String,
 }
 
-#[derive(FromRow)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(FromRow, Debug, Clone, Serialize, Deserialize)]
 pub struct NewPerson {
-    pub name: String
+    pub name: String,
 }
 
-#[derive(FromRow)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(FromRow, Debug, Clone, Serialize, Deserialize)]
 pub struct UpdatePerson {
-    pub name: String
+    pub name: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -110,16 +103,14 @@ pub struct Script {
     pub name: String,
 }
 
-#[derive(FromRow)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(FromRow, Debug, Clone, Serialize, Deserialize)]
 pub struct NewScript {
-    pub name: String
+    pub name: String,
 }
 
-#[derive(FromRow)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(FromRow, Debug, Clone, Serialize, Deserialize)]
 pub struct UpdateScript {
-    pub name: String
+    pub name: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -128,16 +119,14 @@ pub struct Group {
     pub name: String,
 }
 
-#[derive(FromRow)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(FromRow, Debug, Clone, Serialize, Deserialize)]
 pub struct NewGroup {
-    pub name: String
+    pub name: String,
 }
 
-#[derive(FromRow)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(FromRow, Debug, Clone, Serialize, Deserialize)]
 pub struct UpdateGroup {
-    pub name: String
+    pub name: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -158,8 +147,7 @@ pub struct Conlang {
     pub notes: Option<String>,
 }
 
-#[derive(FromRow)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(FromRow, Debug, Clone, Serialize, Deserialize)]
 pub struct NewConlang {
     pub name: String,
     pub native_name: Option<String>,
@@ -176,8 +164,7 @@ pub struct NewConlang {
     pub notes: Option<String>,
 }
 
-#[derive(FromRow)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(FromRow, Debug, Clone, Serialize, Deserialize)]
 pub struct UpdateConlang {
     pub name: String,
     pub native_name: Option<String>,

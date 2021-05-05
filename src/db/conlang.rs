@@ -12,10 +12,10 @@ impl Model {
                 SELECT *
                 FROM conlangs
                 ORDER BY id
-            "#
+            "#,
         )
-            .fetch_all(pool)
-            .await?;
+        .fetch_all(pool)
+        .await?;
 
         for row in recs {
             items.push(Self {
@@ -32,7 +32,7 @@ impl Model {
                 purpose: row.get(10),
                 vocabulary_source: row.get(11),
                 development: row.get(12),
-                notes: row.get(13)
+                notes: row.get(13),
             });
         }
 
@@ -45,9 +45,9 @@ impl Model {
                 SELECT * FROM conlangs WHERE id = $1
             "#,
         )
-            .bind(id)
-            .fetch_one(pool)
-            .await?;
+        .bind(id)
+        .fetch_one(pool)
+        .await?;
 
         Ok(Self {
             id: row.get(0),
@@ -63,7 +63,7 @@ impl Model {
             purpose: row.get(10),
             vocabulary_source: row.get(11),
             development: row.get(12),
-            notes: row.get(13)
+            notes: row.get(13),
         })
     }
 
@@ -73,9 +73,9 @@ impl Model {
                 SELECT * FROM conlangs WHERE name = $1
             "#,
         )
-            .bind(name)
-            .fetch_one(pool)
-            .await?;
+        .bind(name)
+        .fetch_one(pool)
+        .await?;
 
         Ok(Self {
             id: row.get(0),
@@ -91,7 +91,7 @@ impl Model {
             purpose: row.get(10),
             vocabulary_source: row.get(11),
             development: row.get(12),
-            notes: row.get(13)
+            notes: row.get(13),
         })
     }
 
@@ -151,26 +151,26 @@ impl Model {
                 RETURNING *
             "#,
         )
-            .bind(&item.name)
-            .bind(id)
-            .map(|row: PgRow| Self {
-                id: row.get(0),
-                name: row.get(1),
-                native_name: row.get(2),
-                registry_code: row.get(3),
-                creators: row.get(4),
-                links: row.get(5),
-                start_year: row.get(6),
-                physical_mode: row.get(7),
-                scripts: row.get(8),
-                groups: row.get(9),
-                purpose: row.get(10),
-                vocabulary_source: row.get(11),
-                development: row.get(12),
-                notes: row.get(13)
-            })
-            .fetch_one(&mut tx)
-            .await?;
+        .bind(&item.name)
+        .bind(id)
+        .map(|row: PgRow| Self {
+            id: row.get(0),
+            name: row.get(1),
+            native_name: row.get(2),
+            registry_code: row.get(3),
+            creators: row.get(4),
+            links: row.get(5),
+            start_year: row.get(6),
+            physical_mode: row.get(7),
+            scripts: row.get(8),
+            groups: row.get(9),
+            purpose: row.get(10),
+            vocabulary_source: row.get(11),
+            development: row.get(12),
+            notes: row.get(13),
+        })
+        .fetch_one(&mut tx)
+        .await?;
 
         tx.commit().await?;
         Ok(updated)
@@ -184,9 +184,9 @@ impl Model {
                 WHERE id = $1
             "#,
         )
-            .bind(id)
-            .execute(&mut tx)
-            .await?;
+        .bind(id)
+        .execute(&mut tx)
+        .await?;
 
         tx.commit().await?;
         Ok(true)
