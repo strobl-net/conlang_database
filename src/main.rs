@@ -18,6 +18,16 @@ async fn main() -> Result<()> {
     let config = Config::new();
     let mut listenfd = ListenFd::from_env();
 
+    match std::fs::read("output.log") {
+        Ok(_) => std::fs::remove_file("output.log").unwrap(),
+        Err(_) => println!("no log file"),
+    };
+
+    match setup_logger() {
+        Ok(()) => {}
+        Err(err) => println!("Error: {}, while configuring logger", err),
+    };
+
     let pool = PgPool::connect(&config.db_address).await?;
 
     let mut server = HttpServer::new(move || {
@@ -37,5 +47,23 @@ async fn main() -> Result<()> {
 
     server.run().await?;
 
+    Ok(())
+}
+
+pub fn setup_logger() -> Result<(), fern::InitError> {
+    fern::Dispatch::new()
+        .format(|out, message, record| {
+            out.finish(format_args!(
+                "{}[{}][{}] {}",
+                chrono::Local::now().format("[%Y-%m-%d][%H:%M:%S]"),
+                record.target(),
+                record.level(),
+                message
+            ))
+        })
+        .level(log::LevelFilter::Debug)
+        .chain(std::io::stdout())
+        .chain(fern::log_file("output.log")?)
+        .apply()?;
     Ok(())
 }

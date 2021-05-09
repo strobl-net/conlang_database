@@ -106,6 +106,18 @@ impl Model {
             "#,
         )
             .bind(&item.name)
+            .bind(&item.native_name)
+            .bind(&item.registry_code)
+            .bind(&item.creators)
+            .bind(&item.links)
+            .bind(&item.start_year)
+            .bind(&item.physical_mode)
+            .bind(&item.scripts)
+            .bind(&item.groups)
+            .bind(&item.purpose)
+            .bind(&item.vocabulary_source)
+            .bind(&item.development)
+            .bind(&item.notes)
             .map(|row: PgRow| Self {
                 id: row.get(0),
                 name: row.get(1),
@@ -120,7 +132,7 @@ impl Model {
                 purpose: row.get(10),
                 vocabulary_source: row.get(11),
                 development: row.get(12),
-                notes: row.get(13)
+                notes: row.get(13),
             })
             .fetch_one(&mut tx)
             .await?;
@@ -152,6 +164,18 @@ impl Model {
             "#,
         )
         .bind(&item.name)
+        .bind(&item.native_name)
+        .bind(&item.registry_code)
+        .bind(&item.creators)
+        .bind(&item.links)
+        .bind(&item.start_year)
+        .bind(&item.physical_mode)
+        .bind(&item.scripts)
+        .bind(&item.groups)
+        .bind(&item.purpose)
+        .bind(&item.vocabulary_source)
+        .bind(&item.development)
+        .bind(&item.notes)
         .bind(id)
         .map(|row: PgRow| Self {
             id: row.get(0),

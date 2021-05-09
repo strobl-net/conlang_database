@@ -4,7 +4,7 @@ use sqlx::FromRow;
 
 #[derive(sqlx::Type)]
 #[sqlx(type_name = "purpose")]
-#[sqlx(rename_all = "lowercase")]
+#[sqlx(rename_all = "snake_case")]
 #[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum Purpose {
     Artistic,
@@ -15,7 +15,7 @@ pub enum Purpose {
 
 #[derive(sqlx::Type)]
 #[sqlx(type_name = "purpose_sub")]
-#[sqlx(rename_all = "lowercase")]
+#[sqlx(rename_all = "snake_case")]
 #[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum PurposeSub {
     Personal,
@@ -42,7 +42,7 @@ pub enum PurposeSub {
 
 #[derive(sqlx::Type)]
 #[sqlx(type_name = "physical_mode")]
-#[sqlx(rename_all = "lowercase")]
+#[sqlx(rename_all = "snake_case")]
 #[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum PhysicalMode {
     SpeechWriting,
@@ -55,7 +55,7 @@ pub enum PhysicalMode {
 
 #[derive(sqlx::Type)]
 #[sqlx(type_name = "development_level")]
-#[sqlx(rename_all = "lowercase")]
+#[sqlx(rename_all = "snake_case")]
 #[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum DevelopmentLevel {
     Minimal,
@@ -71,7 +71,7 @@ pub enum DevelopmentLevel {
 
 #[derive(sqlx::Type)]
 #[sqlx(type_name = "vocabulary_source")]
-#[sqlx(rename_all = "lowercase")]
+#[sqlx(rename_all = "snake_case")]
 #[derive(Ord, PartialOrd, Eq, PartialEq, Hash, Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum VocabularySource {
     Priori,
@@ -137,7 +137,7 @@ pub struct Conlang {
     pub registry_code: Option<String>,
     pub creators: Option<Vec<i32>>,
     pub links: Option<Vec<i32>>,
-    pub start_year: NaiveDateTime,
+    pub start_year: Option<NaiveDateTime>,
     pub physical_mode: PhysicalMode,
     pub scripts: Option<Vec<i32>>,
     pub groups: Option<Vec<i32>>,
