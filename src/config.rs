@@ -1,6 +1,3 @@
-use anyhow::Result;
-use sqlx::PgPool;
-
 pub struct Config {
     pub address: String,
     pub db_address: String,

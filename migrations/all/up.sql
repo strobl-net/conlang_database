@@ -1,4 +1,3 @@
-CREATE TYPE purpose as ENUM ('artistic', 'personal', 'artlang');
 CREATE TYPE purpose_sub as ENUM (
     'personal', 'jokelang', 'story-based', 'conworld', 'geofictional', 'future', 'alternate_history', 'lostlang',
     'xenolang', 'pseudo_auxlang', 'global_auxlang', 'zonal_auxlang', 'other_auxlang', 'ideal', 'philosophical',
@@ -10,38 +9,42 @@ CREATE TYPE development_level as ENUM (
 
 CREATE TYPE vocabulary_source as ENUM ('priori', 'posteriori', 'mixture', 'other', 'unknown');
 
-CREATE TABLE persons (
-    id SERIAL NOT NULL,
+CREATE TABLE persons
+(
+    id   SERIAL       NOT NULL,
     name VARCHAR(256) NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE scripts (
-    id SERIAL NOT NULL,
+CREATE TABLE scripts
+(
+    id   SERIAL       NOT NULL,
     name VARCHAR(256) NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE groups (
-    id SERIAL NOT NULL,
+CREATE TABLE groups
+(
+    id   SERIAL       NOT NULL,
     name VARCHAR(256) NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE conlangs (
-    id SERIAL NOT NULL,
-    name TEXT NOT NULL,
-    native_name TEXT,
-    registry_code VARCHAR(8),
-    creators INT[],
-    links TEXT[],
-    start_year TIMESTAMP,
-    physical_mode physical_mode NOT NULL,
-    scripts INT[],
-    groups INT[],
-    purpose purpose_sub NOT NULL,
+CREATE TABLE conlangs
+(
+    id                SERIAL           NOT NULL,
+    name              TEXT             NOT NULL,
+    native_name       TEXT,
+    registry_code     VARCHAR(8),
+    creators          INT[],
+    links             TEXT[],
+    start_year        TIMESTAMP,
+    physical_mode     physical_mode     NOT NULL,
+    scripts           INT[],
+    groups            INT[],
+    purpose           purpose_sub       NOT NULL,
     vocabulary_source vocabulary_source NOT NULL,
-    development development_level NOT NULL,
-    notes TEXT,
+    development       development_level NOT NULL,
+    notes             TEXT,
     PRIMARY KEY (id)
 );

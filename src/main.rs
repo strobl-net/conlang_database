@@ -1,23 +1,29 @@
+#![allow(unused)]
+
+#[macro_use]
+extern crate diesel;
+
+#[macro_use]
+extern crate diesel_derive_enum;
+
 use actix_cors::Cors;
 use actix_web::{App, HttpServer};
 use anyhow::Result;
 use listenfd::ListenFd;
-use sqlx::PgPool;
 use tera::Tera;
 
 use crate::config::Config;
+use crate::db::new_pool;
 
 mod config;
 mod db;
 mod models;
 mod queries;
 mod routes;
+mod schema;
 
 #[actix_web::main]
 async fn main() -> Result<()> {
-    let config = Config::new();
-    let mut listenfd = ListenFd::from_env();
-
     match std::fs::read("output.log") {
         Ok(_) => std::fs::remove_file("output.log").unwrap(),
         Err(_) => println!("no log file"),
@@ -28,7 +34,10 @@ async fn main() -> Result<()> {
         Err(err) => println!("Error: {}, while configuring logger", err),
     };
 
-    let pool = PgPool::connect(&config.db_address).await?;
+    let config = Config::new();
+    let mut listenfd = ListenFd::from_env();
+
+    let pool = new_pool(&config);
 
     let mut server = HttpServer::new(move || {
         let tera = Tera::new(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/**/*")).unwrap();

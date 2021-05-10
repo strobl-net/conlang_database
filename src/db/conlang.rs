@@ -1,218 +1,96 @@
 use crate::models::{Conlang as Model, NewConlang as NewModel, UpdateConlang as UpdateModel};
-use anyhow::Result;
-use sqlx::postgres::{PgPool, PgRow};
-use sqlx::Row;
+use crate::queries::ConlangQuery as QueryModel;
+use crate::schema::conlangs as model;
+use crate::schema::conlangs::dsl::conlangs as query;
+use diesel::prelude::*;
 
 impl Model {
-    pub async fn all(pool: &PgPool) -> Result<Vec<Self>> {
-        let mut items = Vec::new();
+    pub async fn all(conn: &PgConnection) -> QueryResult<Vec<Self>> {
+        query.order(model::id.asc()).load(conn)
+    }
 
-        let recs = sqlx::query(
-            r#"
-                SELECT *
-                FROM conlangs
-                ORDER BY id
-            "#,
-        )
-        .fetch_all(pool)
-        .await?;
+    pub async fn by_id(id: i32, conn: &PgConnection) -> QueryResult<Self> {
+        query.find(id).get_result(conn)
+    }
 
-        for row in recs {
-            items.push(Self {
-                id: row.get(0),
-                name: row.get(1),
-                native_name: row.get(2),
-                registry_code: row.get(3),
-                creators: row.get(4),
-                links: row.get(5),
-                start_year: row.get(6),
-                physical_mode: row.get(7),
-                scripts: row.get(8),
-                groups: row.get(9),
-                purpose: row.get(10),
-                vocabulary_source: row.get(11),
-                development: row.get(12),
-                notes: row.get(13),
-            });
+    pub async fn by_name(name: String, conn: &PgConnection) -> QueryResult<Vec<Self>> {
+        query
+            .filter(model::name.ilike(format!("%{}%", name)))
+            .load(conn)
+    }
+
+    pub async fn create(item: NewModel, conn: &PgConnection) -> QueryResult<Self> {
+        diesel::insert_into(model::table)
+            .values(item)
+            .get_result(conn)
+    }
+
+    pub async fn update(id: i32, item: UpdateModel, conn: &PgConnection) -> QueryResult<Self> {
+        diesel::update(query.find(id)).set(item).get_result(conn)
+    }
+
+    pub async fn delete(id: i32, conn: &PgConnection) -> QueryResult<Self> {
+        diesel::delete(query.find(id)).get_result(conn)
+    }
+
+    pub async fn by_query(item: QueryModel, conn: &PgConnection) -> QueryResult<Vec<Self>> {
+        let mut request = model::table.into_boxed();
+
+        if let Some(id) = item.id {
+            request = request.filter(model::id.eq(id))
         }
 
-        Ok(items)
-    }
+        if let Some(name) = item.name {
+            request = request.filter(model::name.eq(name))
+        }
 
-    pub async fn by_id(id: i32, pool: &PgPool) -> Result<Self> {
-        let row = sqlx::query(
-            r#"
-                SELECT * FROM conlangs WHERE id = $1
-            "#,
-        )
-        .bind(id)
-        .fetch_one(pool)
-        .await?;
+        if let Some(native_name) = item.native_name {
+            request = request.filter(model::native_name.eq(native_name))
+        }
 
-        Ok(Self {
-            id: row.get(0),
-            name: row.get(1),
-            native_name: row.get(2),
-            registry_code: row.get(3),
-            creators: row.get(4),
-            links: row.get(5),
-            start_year: row.get(6),
-            physical_mode: row.get(7),
-            scripts: row.get(8),
-            groups: row.get(9),
-            purpose: row.get(10),
-            vocabulary_source: row.get(11),
-            development: row.get(12),
-            notes: row.get(13),
-        })
-    }
+        if let Some(registry_code) = item.registry_code {
+            request = request.filter(model::registry_code.eq(registry_code))
+        }
 
-    pub async fn by_name(name: String, pool: &PgPool) -> Result<Self> {
-        let row = sqlx::query(
-            r#"
-                SELECT * FROM conlangs WHERE name = $1
-            "#,
-        )
-        .bind(name)
-        .fetch_one(pool)
-        .await?;
+        if let Some(creators) = item.creators {
+            request = request.filter(model::creators.eq(creators))
+        }
 
-        Ok(Self {
-            id: row.get(0),
-            name: row.get(1),
-            native_name: row.get(2),
-            registry_code: row.get(3),
-            creators: row.get(4),
-            links: row.get(5),
-            start_year: row.get(6),
-            physical_mode: row.get(7),
-            scripts: row.get(8),
-            groups: row.get(9),
-            purpose: row.get(10),
-            vocabulary_source: row.get(11),
-            development: row.get(12),
-            notes: row.get(13),
-        })
-    }
+        if let Some(links) = item.links {
+            request = request.filter(model::links.eq(links))
+        }
 
-    pub async fn create(item: NewModel, pool: &PgPool) -> Result<Self> {
-        let mut tx = pool.begin().await?;
-        let created = sqlx::query(
-            r#"
-                INSERT INTO conlangs
-                (name, native_name, registry_code, creators, links, start_year, physical_mode, scripts, groups, purpose, vocabulary_source, development, notes)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-                RETURNING *
-            "#,
-        )
-            .bind(&item.name)
-            .bind(&item.native_name)
-            .bind(&item.registry_code)
-            .bind(&item.creators)
-            .bind(&item.links)
-            .bind(&item.start_year)
-            .bind(&item.physical_mode)
-            .bind(&item.scripts)
-            .bind(&item.groups)
-            .bind(&item.purpose)
-            .bind(&item.vocabulary_source)
-            .bind(&item.development)
-            .bind(&item.notes)
-            .map(|row: PgRow| Self {
-                id: row.get(0),
-                name: row.get(1),
-                native_name: row.get(2),
-                registry_code: row.get(3),
-                creators: row.get(4),
-                links: row.get(5),
-                start_year: row.get(6),
-                physical_mode: row.get(7),
-                scripts: row.get(8),
-                groups: row.get(9),
-                purpose: row.get(10),
-                vocabulary_source: row.get(11),
-                development: row.get(12),
-                notes: row.get(13),
-            })
-            .fetch_one(&mut tx)
-            .await?;
+        if let Some(start_year) = item.start_year {
+            request = request.filter(model::start_year.eq(start_year))
+        }
 
-        tx.commit().await?;
-        Ok(created)
-    }
+        if let Some(physical_mode) = item.physical_mode {
+            request = request.filter(model::physical_mode.eq(physical_mode))
+        }
 
-    pub async fn update(id: i32, item: UpdateModel, pool: &PgPool) -> Result<Self> {
-        let mut tx = pool.begin().await?;
-        let updated = sqlx::query(
-            r#"
-                UPDATE conlangs
-                SET name = $1,
-                native_name = $2,
-                registry_code = $3,
-                creators = $4,
-                links = $5,
-                start_year = $6,
-                physical_mode = $7,
-                scripts = $8,
-                groups = $9,
-                purpose = $10,
-                vocabulary_source = $11,
-                development = $12,
-                notes = $13
-                WHERE id = $14
-                RETURNING *
-            "#,
-        )
-        .bind(&item.name)
-        .bind(&item.native_name)
-        .bind(&item.registry_code)
-        .bind(&item.creators)
-        .bind(&item.links)
-        .bind(&item.start_year)
-        .bind(&item.physical_mode)
-        .bind(&item.scripts)
-        .bind(&item.groups)
-        .bind(&item.purpose)
-        .bind(&item.vocabulary_source)
-        .bind(&item.development)
-        .bind(&item.notes)
-        .bind(id)
-        .map(|row: PgRow| Self {
-            id: row.get(0),
-            name: row.get(1),
-            native_name: row.get(2),
-            registry_code: row.get(3),
-            creators: row.get(4),
-            links: row.get(5),
-            start_year: row.get(6),
-            physical_mode: row.get(7),
-            scripts: row.get(8),
-            groups: row.get(9),
-            purpose: row.get(10),
-            vocabulary_source: row.get(11),
-            development: row.get(12),
-            notes: row.get(13),
-        })
-        .fetch_one(&mut tx)
-        .await?;
+        if let Some(scripts) = item.scripts {
+            request = request.filter(model::scripts.eq(scripts))
+        }
 
-        tx.commit().await?;
-        Ok(updated)
-    }
+        if let Some(groups) = item.groups {
+            request = request.filter(model::groups.eq(groups))
+        }
 
-    pub async fn delete(id: i32, pool: &PgPool) -> Result<bool> {
-        let mut tx = pool.begin().await?;
-        sqlx::query(
-            r#"
-                DELETE FROM conlangs
-                WHERE id = $1
-            "#,
-        )
-        .bind(id)
-        .execute(&mut tx)
-        .await?;
+        if let Some(purpose) = item.purpose {
+            request = request.filter(model::purpose.eq(purpose))
+        }
+        if let Some(vocabulary_source) = item.vocabulary_source {
+            request = request.filter(model::vocabulary_source.eq(vocabulary_source))
+        }
 
-        tx.commit().await?;
-        Ok(true)
+        if let Some(development) = item.development {
+            request = request.filter(model::development.eq(development))
+        }
+
+        if let Some(notes) = item.notes {
+            request = request.filter(model::notes.eq(notes))
+        }
+
+        request.order(model::id.asc()).load(conn)
     }
 }
