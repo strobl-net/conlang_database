@@ -6,6 +6,12 @@ edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[workspace]
+members = [
+    "crates/conlang_database_types",
+    "services/conlang_database_auth"
+]
+
 [dependencies]
 actix-web= "=4.0.0-beta.5"
 actix-service = "=2.0.0-beta.5"

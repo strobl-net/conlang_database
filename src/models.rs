@@ -85,7 +85,7 @@ pub struct Person {
     pub name: String,
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, AsChangeset)]
 #[table_name = "persons"]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NewPerson {
@@ -105,7 +105,7 @@ pub struct Script {
     pub name: String,
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, AsChangeset)]
 #[table_name = "scripts"]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NewScript {
@@ -125,7 +125,7 @@ pub struct Group {
     pub name: String,
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, AsChangeset)]
 #[table_name = "groups"]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NewGroup {
@@ -157,7 +157,7 @@ pub struct Conlang {
     pub notes: Option<String>,
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, AsChangeset)]
 #[table_name = "conlangs"]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NewConlang {

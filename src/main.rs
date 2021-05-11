@@ -19,6 +19,7 @@ mod config;
 mod db;
 mod models;
 mod queries;
+mod requests;
 mod routes;
 mod schema;
 

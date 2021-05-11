@@ -3,6 +3,7 @@ use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::PgConnection;
 
 pub mod conlang;
+pub mod full;
 pub mod group;
 pub mod person;
 pub mod script;

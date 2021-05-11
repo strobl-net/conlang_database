@@ -12,28 +12,28 @@ CREATE TYPE vocabulary_source as ENUM ('priori', 'posteriori', 'mixture', 'other
 CREATE TABLE persons
 (
     id   SERIAL       NOT NULL,
-    name VARCHAR(256) NOT NULL,
+    name VARCHAR(256) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE scripts
 (
     id   SERIAL       NOT NULL,
-    name VARCHAR(256) NOT NULL,
+    name VARCHAR(256) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE groups
 (
     id   SERIAL       NOT NULL,
-    name VARCHAR(256) NOT NULL,
+    name VARCHAR(256) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE conlangs
 (
-    id                SERIAL           NOT NULL,
-    name              TEXT             NOT NULL,
+    id                SERIAL            NOT NULL,
+    name              TEXT              NOT NULL UNIQUE,
     native_name       TEXT,
     registry_code     VARCHAR(8),
     creators          INT[],

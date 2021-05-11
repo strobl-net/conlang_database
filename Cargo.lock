@@ -429,6 +429,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "conlang_database_auth"
+version = "0.1.0"
+dependencies = [
+ "actix-cors",
+ "actix-http",
+ "actix-service",
+ "actix-web",
+ "diesel",
+ "diesel-derive-enum",
+]
+
+[[package]]
+name = "conlang_database_types"
+version = "0.1.0"
+
+[[package]]
 name = "const_fn"
 version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"

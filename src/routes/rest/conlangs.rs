@@ -1,6 +1,7 @@
 use crate::db::PgPool;
 use crate::models::{Conlang as Model, NewConlang as NewModel, UpdateConlang as UpdateModel};
 use crate::queries::ConlangQuery as QueryModel;
+use crate::requests::{FullConlang, NewFullConlang};
 use actix_web::web::ServiceConfig;
 use actix_web::{delete, get, patch, post, web, Error, HttpRequest, HttpResponse};
 
@@ -10,6 +11,7 @@ pub fn endpoints(config: &mut ServiceConfig) {
         .service(by_id)
         .service(by_name)
         .service(new)
+        .service(new_full)
         .service(update)
         .service(delete);
 }
@@ -58,6 +60,17 @@ pub async fn new(
     let conn = pool.get().unwrap();
     let item = item.into_inner();
     let item = Model::create(item, &conn).await.unwrap();
+    Ok(HttpResponse::Ok().json(item))
+}
+
+#[post("/api/f/conlangs")]
+pub async fn new_full(
+    pool: web::Data<PgPool>,
+    item: web::Json<NewFullConlang>,
+) -> Result<HttpResponse, Error> {
+    let conn = pool.get().unwrap();
+    let item = item.into_inner();
+    let item = FullConlang::create_with_sub(item, &conn).await.unwrap();
     Ok(HttpResponse::Ok().json(item))
 }
 
